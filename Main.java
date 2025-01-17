@@ -16,13 +16,11 @@ class Main{
     }
     void createfile(){
         try{
-            
-            File file = new File(extenstion);
             if(!file.exists()){
                 file.createNewFile();
                 System.out.println("Creating file " + file.toPath());
             }else{
-                System.out.println("File already exists");
+                System.out.println("File already exists: " + file.getAbsolutePath());
             }
         }catch(Exception e){
             System.out.println("Error"+e.getMessage());
@@ -33,16 +31,17 @@ class Main{
             appendtext();
             return;
         }
-        try(FileWriter fw = new FileWriter(extenstion)){
+        try(FileWriter fw = new FileWriter(file)){
             System.out.println("Enter content");
             String content = scanner.nextLine();
             fw.write(content);
+            System.out.println("Content written to file.");
         }catch(Exception e){
             System.out.println("Error"+e.getMessage());
         }
     }
     void readfile(){
-        try(BufferedReader br = new BufferedReader(new FileReader(extenstion) )){
+        try(BufferedReader br = new BufferedReader(new FileReader(file) )){
             while(br.ready()){
                 System.out.println(br.readLine());
             }
@@ -51,11 +50,11 @@ class Main{
         }
     }
     void appendtext(){
-        try(FileWriter fw = new FileWriter(extenstion, true)){
-            System.out.println("writing text...");
-            System.out.println("Enter content");
+        try(FileWriter fw = new FileWriter(file, true)){
+            System.out.println("Enter content to append:");
             String content = scanner.nextLine();
-            fw.write(content);
+            fw.write(content + System.lineSeparator());
+            System.out.println("Content appended to file.");
         }catch(Exception e){
             System.out.println("Error"+e.getMessage());
         }
@@ -64,9 +63,9 @@ class Main{
     void deletefile(){
         try{
             if(file.delete()){
-                System.out.println("deleting file...");
+                System.out.println("File deleted successfully");
             }else{
-                System.out.println("Deleting file failed");
+                System.out.println("Failed to delete the file");
             }
         }catch(Exception e){
             System.out.println(e.getMessage());
@@ -78,7 +77,7 @@ class Main{
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter filename");
         String newfilename = sc.next();
-        System.out.println("enter extension");
+        System.out.println("Enter extension (e.g., txt):");
         String extension = sc.next();
         Main app = new Main(newfilename,"."+ extension);
         while(true){
@@ -90,6 +89,7 @@ class Main{
             System.out.println("6.Exit");
             System.out.println("Enter choice");
             int choice = sc.nextInt();
+            sc.nextLine();
             switch (choice) {
                 case 1:
                     app.createfile();
@@ -108,10 +108,9 @@ class Main{
                     break;
                 case 6:
                     sc.close();
-                    System.exit(choice);
+                    System.exit(0);
                 default:
-                    System.out.println("Unknown choice");
-                    break;
+                    System.out.println("Invalid choice. Try again.");
             }
         }
     }
